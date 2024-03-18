@@ -31,6 +31,7 @@ resource "aws_subnet" "public" {
   vpc_id     = aws_vpc.main.id
   cidr_block = var.public_subnets_cidr[count.index]
   availability_zone = local.azs[count.index]
+  map_public_ip_on_launch = true
   tags = {
     Name = "${local.name}-public-${local.azs[count.index]}"
   }
@@ -142,7 +143,7 @@ resource "aws_route_table" "database" {
 resource "aws_route" "public" {
   route_table_id            = aws_route_table.public.id
   destination_cidr_block    = "0.0.0.0/0"
-  nat_gateway_id = aws_nat_gateway.main.id
+  gateway_id = aws_internet_gateway.igw.id
 }
 
 # create public routes
